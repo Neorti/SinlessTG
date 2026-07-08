@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
+  <title>Sinless TG — очистка своих сообщений в Telegram</title>
+  <meta name="description" content="Sinless TG — приватный браузерный инструмент для поиска и удаления своих сообщений в Telegram по ключевым словам. Работает полностью локально: данные и сессия не покидают ваше устройство. A private, browser-only tool to find and delete your own Telegram messages by keyword.">
+  <meta name="keywords" content="telegram, cleaner, delete messages, удалить сообщения телеграм, очистка телеграм, приватность, privacy, sinless tg">
+  <meta name="theme-color" content="#17212b">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Sinless TG — очистка своих сообщений в Telegram">
+  <meta property="og:description" content="Приватный браузерный инструмент для поиска и удаления своих сообщений в Telegram по ключевым словам. Всё работает локально в вашем браузере.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%233390ec'/%3E%3Ctext y='74' x='50' font-size='58' text-anchor='middle'%3E%F0%9F%A7%B9%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand" data-i18n="appTitle">Sinless TG</div>
+    <div class="topbar-right">
+      <button id="langToggle" class="btn btn-ghost" type="button"></button>
+      <div id="profileBox" class="profile hidden">
+        <img id="profileAvatar" class="avatar hidden" alt="">
+        <div id="profileAvatarFallback" class="avatar avatar-fallback hidden"></div>
+        <div class="profile-text">
+          <div id="profileName" class="profile-name"></div>
+          <div class="profile-sub">
+            <span id="profileUsername"></span>
+            <span id="profilePhone"></span>
+          </div>
+        </div>
+        <button id="logoutBtn" class="btn btn-ghost" type="button" data-i18n="logoutBtn"></button>
+      </div>
+    </div>
+  </header>
+
+  <div class="notice" data-i18n="privacyNotice"></div>
+
+  <main class="container">
+    <!-- Конфиг не заполнен -->
+    <section id="setupWarn" class="card error-card hidden">
+      <p data-i18n="configMissing"></p>
+    </section>
+
+    <!-- Статус загрузки/подключения -->
+    <section id="bootStatus" class="card">
+      <p id="bootStatusText"></p>
+    </section>
+
+    <!-- Логин -->
+    <section id="loginCard" class="card hidden">
+      <h2 data-i18n="loginTitle"></h2>
+      <form id="loginForm" autocomplete="off">
+        <label id="loginLabel" for="loginInput"></label>
+        <input id="loginInput" type="text" autocomplete="off">
+        <button id="loginSubmit" class="btn btn-primary" type="submit" data-i18n="nextBtn"></button>
+      </form>
+      <p id="loginStatus" class="muted hidden"></p>
+      <p id="loginError" class="error-text hidden"></p>
+    </section>
+
+    <!-- Основная вкладка -->
+    <section id="appMain" class="hidden">
+      <h2 data-i18n="tabDelete"></h2>
+      <p class="muted small" data-i18n="ownOnlyHint"></p>
+
+      <!-- Шаблоны -->
+      <div class="acc card" id="tplAcc">
+        <div class="acc-head" data-acc="tplAccBody">
+          <span class="acc-title" data-i18n="templatesTitle"></span>
+          <span id="tplSelectedCount" class="badge hidden"></span>
+          <span class="chev">▾</span>
+        </div>
+        <div class="acc-body hidden" id="tplAccBody">
+          <div class="row gap">
+            <input id="tplSearch" type="search" data-i18n-ph="tplSearchPlaceholder">
+            <button id="tplNewBtn" class="btn" type="button" data-i18n="tplNewBtn"></button>
+          </div>
+          <div id="tplList" class="tpl-grid"></div>
+        </div>
+      </div>
+
+      <!-- Свободные ключевые слова -->
+      <div class="card">
+        <label for="freeWords" class="block-label" data-i18n="freeWordsTitle"></label>
+        <p class="muted small" data-i18n="freeWordsHint"></p>
+        <textarea id="freeWords" rows="4" spellcheck="false"></textarea>
+      </div>
+
+      <!-- Личные чаты -->
+      <div class="acc card" id="pcAcc">
+        <div class="acc-head" data-acc="pcBody">
+          <input type="checkbox" id="pcMaster" class="cb">
+          <span class="acc-title" data-i18n="personalChats"></span>
+          <span id="pcCount" class="badge hidden"></span>
+          <span class="chev">▾</span>
+        </div>
+        <div class="acc-body hidden" id="pcBody">
+          <input id="pcSearch" type="search" data-i18n-ph="chatSearchPlaceholder">
+          <div id="pcList" class="chat-list"></div>
+        </div>
+      </div>
+
+      <!-- Группы и каналы -->
+      <div class="acc card" id="grAcc">
+        <div class="acc-head" data-acc="grBody">
+          <input type="checkbox" id="grMaster" class="cb">
+          <span class="acc-title" data-i18n="groupChats"></span>
+          <span id="grCount" class="badge hidden"></span>
+          <span class="chev">▾</span>
+        </div>
+        <div class="acc-body hidden" id="grBody">
+          <input id="grSearch" type="search" data-i18n-ph="chatSearchPlaceholder">
+          <div id="grList" class="chat-list"></div>
+        </div>
+      </div>
+
+      <!-- Опции удаления: отдельно для ЛС и для групп -->
+      <div class="card options">
+        <div class="section-title" data-i18n="deleteOptionsTitle"></div>
+        <div class="options-cols">
+          <div class="opt-panel">
+            <div class="opt-panel-title" data-i18n="personalChats"></div>
+            <div class="opt-group">
+              <span class="opt-label" data-i18n="optOwnershipTitle"></span>
+              <label class="opt"><input type="radio" name="ownership-pc" value="mine" checked><span data-i18n="optMine"></span></label>
+              <label class="opt"><input type="radio" name="ownership-pc" value="others"><span data-i18n="optOthers"></span></label>
+              <label class="opt"><input type="radio" name="ownership-pc" value="all"><span data-i18n="optAll"></span></label>
+            </div>
+            <div class="opt-group">
+              <span class="opt-label" data-i18n="optScopeTitle"></span>
+              <label class="opt"><input type="radio" name="scope-pc" value="everyone" checked><span data-i18n="optForEveryone"></span></label>
+              <label class="opt"><input type="radio" name="scope-pc" value="me"><span data-i18n="optForMe"></span></label>
+            </div>
+          </div>
+          <div class="opt-panel">
+            <div class="opt-panel-title" data-i18n="groupChats"></div>
+            <div class="opt-group">
+              <span class="opt-label" data-i18n="optOwnershipTitle"></span>
+              <label class="opt"><input type="radio" name="ownership-gr" value="mine" checked><span data-i18n="optMine"></span></label>
+              <label class="opt"><input type="radio" name="ownership-gr" value="others"><span data-i18n="optOthers"></span></label>
+              <label class="opt"><input type="radio" name="ownership-gr" value="all"><span data-i18n="optAll"></span></label>
+            </div>
+            <div class="opt-group">
+              <span class="opt-label" data-i18n="optScopeTitle"></span>
+              <label class="opt"><input type="radio" name="scope-gr" value="everyone" checked><span data-i18n="optForEveryone"></span></label>
+              <label class="opt"><input type="radio" name="scope-gr" value="me"><span data-i18n="optForMe"></span></label>
+            </div>
+          </div>
+        </div>
+        <p class="muted small" id="optHint" data-i18n="optHint"></p>
+      </div>
+
+      <!-- Метод поиска -->
+      <div class="card options">
+        <div class="section-title" data-i18n="methodTitle"></div>
+        <label class="method-opt">
+          <input type="radio" name="scanMethod" value="global" checked>
+          <span>
+            <span class="method-name" data-i18n="methodGlobalName"></span>
+            <span class="method-desc muted small" data-i18n="methodGlobalDesc"></span>
+          </span>
+        </label>
+        <label class="method-opt">
+          <input type="radio" name="scanMethod" value="perchat">
+          <span>
+            <span class="method-name" data-i18n="methodPerChatName"></span>
+            <span class="method-desc muted small" data-i18n="methodPerChatDesc"></span>
+          </span>
+        </label>
+        <p class="muted small method-note" data-i18n="methodNote"></p>
+      </div>
+
+      <!-- Действия -->
+      <div class="actions">
+        <button id="btnCount" class="btn btn-primary" type="button" data-i18n="countBtn"></button>
+        <button id="btnDelete" class="btn btn-danger" type="button" data-i18n="deleteBtn" disabled></button>
+        <button id="btnStop" class="btn btn-danger hidden" type="button" data-i18n="stopBtn"></button>
+      </div>
+
+      <div id="scanSummary" class="summary hidden"></div>
+      <div class="progress hidden" id="progressWrap"><div id="progressBar"></div></div>
+      <div id="log" class="log hidden"></div>
+    </section>
+  </main>
+
+  <!-- Модальное окно (инфо о шаблоне / редактор / подтверждение) -->
+  <div id="modalBack" class="modal-back hidden">
+    <div id="modal" class="modal" role="dialog" aria-modal="true"></div>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

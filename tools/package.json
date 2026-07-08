@@ -1,0 +1,15 @@
+{
+  "name": "gramjs-vendor-build",
+  "private": true,
+  "type": "module",
+  "description": "Rebuilds vendor/telegram.js (GramJS browser bundle). Not needed for deployment.",
+  "scripts": {
+    "build": "node build-gramjs.mjs"
+  },
+  "dependencies": {
+    "buffer": "^6.0.3",
+    "esbuild": "^0.25.0",
+    "process": "^0.11.10",
+    "telegram": "2.26.22"
+  }
+}

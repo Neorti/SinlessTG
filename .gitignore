@@ -1,0 +1,11 @@
+# IDE
+.idea/
+
+# Инструменты сборки бандла (для деплоя не нужны)
+tools/node_modules/
+tools/shims/
+tools/package-lock.json
+
+# ОС
+.DS_Store
+Thumbs.db
