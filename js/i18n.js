@@ -10,6 +10,17 @@ export const I18N = {
       "Это приложение работает полностью в вашем браузере. Ваши данные и сессия не покидают это устройство и не передаются на сервер сайта.",
     langToggle: "EN",
 
+    // --- описание проекта (до входа) ---
+    aboutTagline: "Наведите порядок в своей переписке.",
+    aboutText:
+      "Sinless TG помогает находить и удалять ваши собственные сообщения в Telegram — по ключевым словам или целиком в выбранном чате. Удобно для цифровой гигиены и личной безопасности.",
+    feat1Title: "Поиск по ключевым словам",
+    feat1Desc: "Готовые наборы слов или свои — по всем чатам или выбранным. Только ваши сообщения.",
+    feat2Title: "Полная приватность",
+    feat2Desc: "Работает целиком в вашем браузере. Данные и сессия не уходят ни на какой сервер.",
+    feat3Title: "Открытый код",
+    feat3Desc: "Исходники открыты — можно проверить или развернуть свою копию.",
+
     // --- конфиг / загрузка ---
     configMissing:
       "Приложение не настроено: в js/config.js не заданы api_id и api_hash. Владелец сайта должен получить их на my.telegram.org и вписать в код (см. README).",
@@ -168,6 +179,17 @@ export const I18N = {
     privacyNotice:
       "This app runs entirely in your browser. Your data and session never leave this device and are never sent to the site's server.",
     langToggle: "RU",
+
+    // --- project description (pre-login) ---
+    aboutTagline: "Tidy up your own chat history.",
+    aboutText:
+      "Sinless TG helps you find and delete your own Telegram messages — by keywords or entirely within a chosen chat. Handy for digital hygiene and personal safety.",
+    feat1Title: "Keyword search",
+    feat1Desc: "Ready-made word sets or your own — across all chats or selected ones. Only your messages.",
+    feat2Title: "Fully private",
+    feat2Desc: "Runs entirely in your browser. Your data and session never reach any server.",
+    feat3Title: "Open source",
+    feat3Desc: "The source is open — inspect it or deploy your own copy.",
 
     configMissing:
       "The app is not configured: api_id and api_hash are missing in js/config.js. The site owner must obtain them at my.telegram.org and put them into the code (see README).",

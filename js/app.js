@@ -965,6 +965,7 @@ function setupIdleManagement() {
 async function enterApp() {
   state.me = await tg.getMe();
   await renderProfile();
+  show($("aboutCard"), false); // описание нужно только до входа
   show($("appMain"));
   await loadBuiltinTemplates(); // системные шаблоны из data/builtin-templates.json
   renderTemplates();
